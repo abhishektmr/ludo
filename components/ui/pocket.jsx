@@ -21,7 +21,7 @@ const Pocket = React.memo(({ playerId }) => {
           </View>
           <View style={[styles.pawnCircle, { backgroundColor: Colors[pawns[1].color] }]}>
             {pawns[1]?.moves === 0 && (
-              <View> 
+              <View style={{ height: 30, width: 28}}> 
                 <Pawn pawnData={pawns[1]}/> 
               </View>
             )}
@@ -30,14 +30,14 @@ const Pocket = React.memo(({ playerId }) => {
         <View style={styles.pawnContainer}>
           <View style={[styles.pawnCircle, { backgroundColor: Colors[pawns[2].color] }]}>
             {pawns[2]?.moves === 0 && (
-              <View> 
+              <View style={{ height: 30, width: 28}}> 
                 <Pawn pawnData={pawns[2]}/> 
               </View>
             )}
           </View>
           <View style={[styles.pawnCircle, { backgroundColor: Colors[pawns[3].color] }]}>
             {pawns[3]?.moves === 0 && (
-              <View> 
+              <View style={{ height: 30, width: 28}}> 
                 <Pawn pawnData={pawns[3]}/> 
               </View>
             )}

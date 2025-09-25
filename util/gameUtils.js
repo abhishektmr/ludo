@@ -1,4 +1,12 @@
 import { startingPoints } from "../helpers/PathData";
+import bluePawn from "../assets/images/piles/blue.png";
+import greenPawn from "../assets/images/piles/green.png";
+import redPawn from "../assets/images/piles/red.png";
+import yellowPawn from "../assets/images/piles/yellow.png";
+import dimensions from "../constants/dimensions";
+
+const { deviceWidth } = dimensions;
+const size = deviceWidth/5;
 
 export function nextPlayerId(currentPlayerId) {
   return (currentPlayerId % 4) + 1;
@@ -42,7 +50,7 @@ export function getUpdatedPawn(pawn, steps, playerId, isKilled = false) {
   } else if (totalMoves >= 52) {
     // Enter home path
     newMoves = totalMoves;
-    newTileId = getNextTileId(pawnData.id, newMoves);
+    newTileId = getNextTileId(pawn.id, newMoves);
     onHomePath = true;
   } else {
     // Normal move on board
@@ -52,3 +60,49 @@ export function getUpdatedPawn(pawn, steps, playerId, isKilled = false) {
   }
   return { ...pawn, moves: newMoves, tileId: newTileId, onHomePath };
 }
+
+// Helper function for pawn placement
+export const getPawnPositions = (count) => {
+  const positions = [];
+
+  if (count === 1) {
+    positions.push({ x: 0, y: 0 });
+  } else if (count === 2) {
+    positions.push({ x: -12, y: 0 });
+    positions.push({ x: 12, y: 0 });
+  } else if (count === 3) {
+    positions.push({ x: -12, y: -12 });
+    positions.push({ x: 12, y: -12 });
+    positions.push({ x: 0, y: 12 });
+  } else {
+    // 4+ → arrange in a 2x2 grid
+    positions.push({ x: -12, y: -12 });
+    positions.push({ x: 12, y: -12 });
+    positions.push({ x: -12, y: 12 });
+    positions.push({ x: 12, y: 12 });
+  }
+
+  return positions;
+};
+
+export const pawnImage = (color) => {
+  switch (color) {
+    case "red":
+      return redPawn;
+    case "green":
+      return greenPawn;
+    case "blue":
+      return bluePawn;
+    case "yellow":
+      return yellowPawn;
+    default:
+      return null;
+    }
+};
+
+export const triangleAnchors = {
+  red: { x: size / 2, y: size * 0.1 },
+  green: { x: size * 0.9, y: size / 2 },
+  blue: { x: size / 2, y: size * 0.9 },
+  yellow: { x: size * 0.1, y: size / 2 },
+};

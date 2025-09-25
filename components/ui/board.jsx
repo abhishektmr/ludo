@@ -3,6 +3,9 @@ import dimensions from "../../constants/dimensions";
 import { Path1Data, Path2Data, Path3Data, Path4Data } from "../../helpers/PathData";
 import Pocket from "./pocket";
 import Tile from "./tile";
+import Centre from "./Triangles";
+import Triangles from "./Triangles";
+import Destination from "./destination";
 const { deviceWidth } = dimensions;
 
 const Board = () => {
@@ -45,7 +48,9 @@ const Board = () => {
           ))}
         </View>
 
-        {/* <View style={styles.home}></View> */}
+        <View style={styles.centreSquare}>
+            <Destination/>
+        </View> 
 
         <View style={styles.horizontalPath}>
           {Path4Data.map((path) => (
@@ -118,18 +123,13 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "40%",
   },
-  // home: {
-  //   height: "100%",
-  //   width: "20%",
-  //   borderTopWidth: 40,
-  //   borderTopColor: Colors.blue,
-  //   borderLeftWidth: 40,
-  //   borderLeftColor: Colors.green,
-  //   borderBottomWidth: 36,
-  //   borderBottomColor: Colors.red,
-  //   borderRightWidth: 36,
-  //   borderRightColor: Colors.yellow,
-  // },
+  centreSquare: {
+    alignItems: "center",
+    ustifyContent: "center", 
+    height: "100%", 
+    width: "20%",
+    backgroundColor: "pink"
+  }
 });
 
 export default Board;

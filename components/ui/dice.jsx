@@ -50,7 +50,7 @@ const Dice = React.memo(({ color, rotate, playerId, diceRollResult }) => {
     );
 
     animatedArrow.start();
-  }, [currentPlayerId]);
+  }, [currentPlayerId, isDiceRolled]);
 
   const handleDiceRoll = () => {
     dispatch(rollDice());

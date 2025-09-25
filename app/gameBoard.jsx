@@ -88,7 +88,7 @@ export default function GameBoard() {
 
         <View style={styles.diceContainer}>
           <Dice color={Colors.red} playerId={1} diceRollResult={currentPlayerId === 1 ? diceRollResult : null}/>
-          <Dice color={Colors.yellow} playerId={4} diceRollResult={currentPlayerId === 4 ? diceRollResult : null}/>
+          <Dice color={Colors.yellow} rotate playerId={4} diceRollResult={currentPlayerId === 4 ? diceRollResult : null}/>
         </View>
 
         <GameBoardModal

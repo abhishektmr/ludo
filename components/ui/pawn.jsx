@@ -8,13 +8,10 @@ import {
   View
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import bluePawn from "../../assets/images/piles/blue.png";
-import greenPawn from "../../assets/images/piles/green.png";
-import redPawn from "../../assets/images/piles/red.png";
-import yellowPawn from "../../assets/images/piles/yellow.png";
 import pointed_circle from "../../assets/images/pointed_circle.png";
 import { movePawn } from "../../redux/gameSlice";
 import { selectCurrentPlayerId, selectIsDiceRolled } from "../../redux/selectors";
+import { pawnImage } from "../../util/gameUtils";
 
 const Pawn = React.memo(({ pawnData }) => {
   // console.log("Pawn component rerendered ", pawnData);
@@ -41,46 +38,27 @@ const Pawn = React.memo(({ pawnData }) => {
       rotationAnimation.stop();
       rotate.setValue(0);
     };
-  }, [rotate]);
+  }, [rotate, isDiceRolled]);
 
-  const rotationInterpolate = useMemo(() => {
-    return rotate.interpolate({
+  const rotationInterpolate = rotate.interpolate({
       inputRange: [0, 1],
       outputRange: ["0deg", "360deg"],
     });
-  }, [rotate]);
 
-  const canMoveForward = useMemo(() => {
-    return (
-      currentPlayerId === playerId &&
-      pawnData.moves != 0 &&
-      pawnData.moves + diceRollResult <= 57
+  const canMoveForward = (
+      currentPlayerId === playerId 
+      && pawnData.moves != 0 
+      && pawnData.moves + diceRollResult <= 57
+      && isDiceRolled
     );
-  }, [currentPlayerId, diceRollResult, pawnData.moves]);
 
-  const showPointedCircle = useMemo(() => {
-    return (
-      currentPlayerId === playerId &&
-      ((diceRollResult === 6 && pawnData.moves === 0) || canMoveForward)
+  const showPointedCircle = (
+      currentPlayerId === playerId 
+      && ((diceRollResult === 6 && pawnData.moves === 0) || canMoveForward)
+      && isDiceRolled
     );
-  }, [currentPlayerId, diceRollResult, pawnData.moves, canMoveForward]);
 
   const isTouchDisabled = !showPointedCircle;
-
-  const pawnImage = useMemo(() => {
-    switch (pawnData.color) {
-      case "red":
-        return redPawn;
-      case "green":
-        return greenPawn;
-      case "blue":
-        return bluePawn;
-      case "yellow":
-        return yellowPawn;
-      default:
-        return null;
-    }
-  }, [pawnData.color]);
 
   const handleMovePawn = () => {
     console.log("handleMovePawn called for player ", playerId);
@@ -107,7 +85,7 @@ const Pawn = React.memo(({ pawnData }) => {
         )}
       </View>
 
-      <Image source={pawnImage} style={[styles.pawnImage, showPointedCircle && isDiceRolled ? { height: 30, top: "-45%" } : null]}/>
+      <Image source={pawnImage(pawnData.color)} style={[styles.pawnImage, showPointedCircle && isDiceRolled ? { height: 30, top: "-45%" } : null]}/>
       </View>
     </TouchableOpacity>
   );
@@ -135,8 +113,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   pointedCircle: {
-    width: 30,
-    height: 30,
+    width: 28,
+    height: 28,
     alignItems: "center",
     justifyContent: "center",
   },

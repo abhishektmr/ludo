@@ -24,14 +24,16 @@ const gameSlice = createSlice({
       state.diceRollId = (state.diceRollId || 0) + 1;
       state.isDiceRolled = true;
 
+      const currentPlayerId = state.currentPlayerId;
       if(diceResult !== 6) {
-        const currentPlayerId = state.currentPlayerId;
         const currentPlayerIndex = state.players.findIndex(p => p.id === currentPlayerId);
         const movablePawns = state.players[currentPlayerIndex].pawns.some(p => p.moves > 0 && p.moves + diceResult < 57);
-        if(!movablePawns) {
+        if(!movablePawns) { // no movable pawns
           state.currentPlayerId = nextPlayerId(state.currentPlayerId);
           state.isDiceRolled = false;
         }
+      } else { // if dice result is 6
+        state.currentPlayerId = currentPlayerId; // keep current player same as before. Do not change turn
       }
       console.log("exiting rollDice of game slice ");
     },
@@ -68,25 +70,22 @@ const gameSlice = createSlice({
         updatedMovingPawn,
         ...state.players[playerIndex].pawns.slice(pawnIndex + 1),
       ];
-      console.log(
-        `Moved pawn ${pawnId} of player ${playerId} by ${steps} steps`
-      );
+      console.log(`Moved pawn ${updatedMovingPawn.id} of player ${playerId} by ${steps} steps. Total steps ${updatedMovingPawn.moves}`);
 
       // Check if pawn completed 57 moves
       if (updatedMovingPawn.moves === 57) {
         // Optionally, mark pawn as finished or update player status here
         // updatedMovingPawn.finished = true;
-        console.log(`Pawn ${pawnId} of player ${playerId} has finished!`);
-        const areAllPawnsFinished = state.players[playerIndex].pawns.every(
-          (p) => p.moves === 57
-        );
+        console.log(`Pawn ${pawnId} of player ${playerId} has completed!`);
+        const areAllPawnsFinished = state.players[playerIndex].pawns.every((p) => p.moves === 57);
         if (areAllPawnsFinished) {
           state.winner = playerId;
           state.fireWorks = true;
           console.log(`Player ${playerId} has won the game!`);
           state.currentPlayerId = nextPlayerId(state.currentPlayerId);
-          state.isDiceRolled = false;
         }
+        state.isDiceRolled = false;
+        console.log(`Exiting movePawn of game slice. isDiceRolled is set to ${state.isDiceRolled}`);
         return;
       }
 
@@ -136,16 +135,8 @@ const gameSlice = createSlice({
         state.currentPlayerId = nextPlayerId(state.currentPlayerId);
       }
       state.isDiceRolled = false;
-      console.log("exiting movePawn of game slice ");
-    },
-
-    // setIsDiceRolled: (state, action) => {
-    //   state.isDiceRolled = action.payload.diceRolled;
-    // },
-
-    // setCurrentPlayerId: (state, action) => {
-    //   state.currentPlayerId = action.payload.nextPlayerId;
-    // },
+      console.log(`Exiting movePawn of game slice. isDiceRolled is set to ${state.isDiceRolled}`);
+    }
   }
 });
 
