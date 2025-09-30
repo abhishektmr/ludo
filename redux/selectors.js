@@ -9,3 +9,16 @@ export const selectAllPawns = createSelector(
     [state => state.game.players],
     (players) => players.flatMap(player => player.pawns)
 )
+export const selectCompletedPawns = createSelector(
+    [state => state.game.players],
+    (players) => {
+    const pawns = { red: [], green: [], blue: [], yellow: [] };
+    players.forEach(player => {
+      player.pawns.forEach(pawn => {
+        if (pawn.moves === 57) {
+          pawns[pawn.color].push(pawn);
+        }
+      });
+    });
+    return pawns;
+})

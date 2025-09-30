@@ -3,8 +3,6 @@ import dimensions from "../../constants/dimensions";
 import { Path1Data, Path2Data, Path3Data, Path4Data } from "../../helpers/PathData";
 import Pocket from "./pocket";
 import Tile from "./tile";
-import Centre from "./Triangles";
-import Triangles from "./Triangles";
 import Destination from "./destination";
 const { deviceWidth } = dimensions;
 
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
   },
   centreSquare: {
     alignItems: "center",
-    ustifyContent: "center", 
+    justifyContent: "center", 
     height: "100%", 
     width: "20%",
     backgroundColor: "pink"

@@ -16,6 +16,12 @@ const gameSlice = createSlice({
       console.log("exiting resetGame of game slice ");
     },
 
+    setGameState: (state, action) => {
+      return {
+        ...action.payload
+      }
+    },
+
     rollDice: (state) => {
       console.log("inside rollDice of game slice ");
       const diceResult = Math.floor(Math.random() * 6) + 1;
@@ -24,16 +30,23 @@ const gameSlice = createSlice({
       state.diceRollId = (state.diceRollId || 0) + 1;
       state.isDiceRolled = true;
 
-      const currentPlayerId = state.currentPlayerId;
-      if(diceResult !== 6) {
-        const currentPlayerIndex = state.players.findIndex(p => p.id === currentPlayerId);
-        const movablePawns = state.players[currentPlayerIndex].pawns.some(p => p.moves > 0 && p.moves + diceResult < 57);
-        if(!movablePawns) { // no movable pawns
-          state.currentPlayerId = nextPlayerId(state.currentPlayerId);
-          state.isDiceRolled = false;
-        }
-      } else { // if dice result is 6
-        state.currentPlayerId = currentPlayerId; // keep current player same as before. Do not change turn
+      const currentPlayerIndex = state.players.findIndex(
+        p => p.id === state.currentPlayerId);
+
+      // Check if player can make any move
+      const canMove = state.players[currentPlayerIndex].pawns.some(p => {
+        // Can exit home with a 6
+        if (diceResult === 6 && p.moves === 0) return true;
+        // Can move forward on board/home path
+        if (p.moves > 0 && p.moves + diceResult <= 57) return true;
+        
+        return false;
+      });
+
+      // If no moves possible, skip turn
+      if (!canMove) {
+        state.currentPlayerId = nextPlayerId(state.currentPlayerId);
+        state.isDiceRolled = false;
       }
       console.log("exiting rollDice of game slice ");
     },
@@ -143,6 +156,7 @@ const gameSlice = createSlice({
 export default gameSlice.reducer;
 export const {
   resetGame,
+  setGameState,
   movePawn,
   rollDice,
   setIsDiceRolled,

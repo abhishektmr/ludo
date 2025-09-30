@@ -40,8 +40,10 @@ export function getUpdatedPawn(pawn, steps, playerId, isKilled = false) {
   if (totalMoves === 57) {
     // Pawn reaches home
     newMoves = 57;
+    newTileId = null;
   } else if (totalMoves > 57) {
     // Invalid move, stay in place
+    return pawn;
   } else if (pawn.onHomePath) {
     // Already on home path
     newMoves = totalMoves;
@@ -61,30 +63,6 @@ export function getUpdatedPawn(pawn, steps, playerId, isKilled = false) {
   return { ...pawn, moves: newMoves, tileId: newTileId, onHomePath };
 }
 
-// Helper function for pawn placement
-export const getPawnPositions = (count) => {
-  const positions = [];
-
-  if (count === 1) {
-    positions.push({ x: 0, y: 0 });
-  } else if (count === 2) {
-    positions.push({ x: -12, y: 0 });
-    positions.push({ x: 12, y: 0 });
-  } else if (count === 3) {
-    positions.push({ x: -12, y: -12 });
-    positions.push({ x: 12, y: -12 });
-    positions.push({ x: 0, y: 12 });
-  } else {
-    // 4+ → arrange in a 2x2 grid
-    positions.push({ x: -12, y: -12 });
-    positions.push({ x: 12, y: -12 });
-    positions.push({ x: -12, y: 12 });
-    positions.push({ x: 12, y: 12 });
-  }
-
-  return positions;
-};
-
 export const pawnImage = (color) => {
   switch (color) {
     case "red":
@@ -100,9 +78,44 @@ export const pawnImage = (color) => {
     }
 };
 
+// Helper function for pawn placement
+export const getPawnOffsets = (count) => {
+  const positions = [];
+
+  if (count === 1) {
+    positions.push({ x: 0, y: 0 });
+  } else if (count === 2) {
+    positions.push({ x: 0, y: 5 });
+    positions.push({ x: 0, y: 10 });
+  } else if (count === 3) {
+    positions.push({ x: -12, y: -12 });
+    positions.push({ x: 12, y: -12 });
+    positions.push({ x: 0, y: 12 });
+  } else {
+    // 4+ → arrange in a 2x2 grid
+    positions.push({ x: -12, y: -12 });
+    positions.push({ x: 12, y: -12 });
+    positions.push({ x: -12, y: 12 });
+    positions.push({ x: 12, y: 12 });
+  }
+
+  return positions;
+};
+
 export const triangleAnchors = {
-  red: { x: size / 2, y: size * 0.1 },
-  green: { x: size * 0.9, y: size / 2 },
-  blue: { x: size / 2, y: size * 0.9 },
-  yellow: { x: size * 0.1, y: size / 2 },
+  // red: { x: size / 2, y: size * 0.1 },
+  // green: { x: size * 0.9, y: size / 2 },
+  // blue: { x: size / 2, y: size * 0.9 },
+  // yellow: { x: size * 0.1, y: size / 2 },
+  red: { x: size / 2.5, y: size * .7 },
+  green: { x: 0, y: size / 2.7 },
+  blue: { x: size / 2.5, y: size * .5 },
+  yellow: { x: 0, y: 0 },
+};
+
+// Final absolute positions for completed pawns
+export const getCompletedPawnPositions = (color, count) => {
+  const anchor = triangleAnchors[color];
+  const offsets = getPawnOffsets(count);
+  return offsets.map((o) => ({ x: anchor.x + o.x, y: anchor.y + o.y }));
 };
