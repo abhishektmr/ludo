@@ -37,8 +37,8 @@ import Svg, { Polygon } from "react-native-svg";
 import { Colors } from "../../constants/Colors";
 import dimensions from "../../constants/dimensions";
 import Pawn from "./pawn";
-import { createSelector } from "@reduxjs/toolkit";
 import { selectCompletedPawns } from "../../redux/selectors";
+import { rotatePawn } from "../../helpers/RotateUtility";
 
 const { deviceWidth } = dimensions;
 const size = deviceWidth / 5;
@@ -49,64 +49,72 @@ const getCompletedPawnPositions = (triangleColor, pawnCount) => {
   const centerX = size / 2;
   const centerY = size / 2;
   
-  // Base offset from center (in percentages)
-  const offset = 0.20; // 15% of triangle size
-  
   if (pawnCount === 1) {
     // Two pawns - arranged based on triangle orientation
     if (triangleColor === 'red') {
-      positions.push({ x: centerX, y: centerY + (centerY/2) });
+      positions.push({ x: centerX - 10, y: centerY + 20 });
     } else if (triangleColor === 'green') {
-      positions.push({ x: centerX - (centerY/2), y: centerY });
+      positions.push({ x: centerX - 40, y: centerY - 10 });
     } else if (triangleColor === 'blue') {
-      positions.push({ x: centerX, y: centerY - (centerY/2) });
+      positions.push({ x: centerX - 10, y: centerY - 40 });
     } else {
-      positions.push({ x: centerX + (centerY/2), y: centerY });
+      positions.push({ x: centerX + 20, y: centerY - 10 });
     }
   } else if (pawnCount === 2) {
     // Two pawns - arranged based on triangle orientation
     if (triangleColor === 'red') {
-      positions.push({ x: centerX - (size * offset *.6), y: centerY + (size * 2*offset) });
-      positions.push({ x: centerX + (size * offset *.6), y: centerY + (size * 2*offset) });
+      positions.push({ x: centerX - (size * .3), y: centerY + (size * .27) });
+      positions.push({ x: centerX + 1.5, y: centerY + (size * .27) });
     } else if (triangleColor === 'green') {
-      positions.push({ x: centerX - size * offset, y: centerY*1.1 });
-      positions.push({ x: centerX - size * 2*offset, y: centerY*1.1 });
+      positions.push({ x: centerX - (size * .54), y: centerY - (size * .3) });
+      positions.push({ x: centerX - (size * .54), y: centerY + 1.5 });
     } else if (triangleColor === 'blue') {
-      positions.push({ x: centerX - (size * offset *.6), y: centerY - (size * offset * 1.1) });
-      positions.push({ x: centerX + (size * offset *.6), y: centerY - (size * offset * 1.1) });
+      positions.push({ x: centerX - (size * .3), y: centerY - (size * .54) });
+      positions.push({ x: centerX + 1.7, y: centerY - (size * .54) });
     } else {
-      positions.push({ x: centerX + size * offset, y: centerY*1.1 });
-      positions.push({ x: centerX + size * 2*offset, y: centerY*1.1 });
+      positions.push({ x: centerX + (size * .27), y: centerY - (size * .3) });
+      positions.push({ x: centerX + (size * .27), y: centerY + 1.5 });
     }
   } else if (pawnCount === 3) {
-    // Three pawns - triangle formation pointing toward triangle apex
-    const gap = size * offset * 1.2;
     if (triangleColor === 'red') {
-      // Red (bottom): triangle pointing down
-      positions.push({ x: centerX, y: centerY + (size * 0.1) });
-      positions.push({ x: centerX - gap * 0.7, y: centerY + gap * 0.6 });
-      positions.push({ x: centerX + gap * 0.7, y: centerY + gap * 0.6 });
+      positions.push({ x: centerX - (size * .3), y: centerY + (size * .27) });
+      positions.push({ x: centerX + (size * .03), y: centerY + (size * .27) });
+      positions.push({ x: centerX - (size * .14), y: centerY + (size * .1) });
     } else if (triangleColor === 'green') {
-      positions.push({ x: centerX - (size * offset), y: centerY });
-      positions.push({ x: centerX - 2*(size * offset), y: centerY + 2*(size * offset * .8) });
-      positions.push({ x: centerX - 2*(size * offset), y: centerY - 2*(size * offset * .4) });
+      positions.push({ x: centerX - (size * .54), y: centerY - (size * .3) });
+      positions.push({ x: centerX - (size * .54), y: centerY + (size * .03) });
+      positions.push({ x: centerX - (size * .4), y: centerY - (size * .13) });
     } else if (triangleColor === 'blue') {
-      // Blue (top): triangle pointing up
-      positions.push({ x: centerX, y: centerY - (size * 0.1) });
-      positions.push({ x: centerX - gap * 0.7, y: centerY - gap * 0.6 });
-      positions.push({ x: centerX + gap * 0.7, y: centerY - gap * 0.6 });
+      positions.push({ x: centerX - (size * .3), y: centerY - (size * .54) });
+      positions.push({ x: centerX + (size * .03), y: centerY - (size * .54) });
+      positions.push({ x: centerX - (size * .14), y: centerY - (size * .35) });
     } else {
-      positions.push({ x: centerX + (size * offset), y: centerY });
-      positions.push({ x: centerX + 2*(size * offset), y: centerY + 2*(size * offset * .8) });
-      positions.push({ x: centerX + 2*(size * offset), y: centerY - 2*(size * offset * .4) });
+      positions.push({ x: centerX + (size * .27), y: centerY - (size * .3) });
+      positions.push({ x: centerX + (size * .27), y: centerY + (size * .03) });
+      positions.push({ x: centerX + (size * .13), y: centerY - (size * .13) });
     }
   } else if (pawnCount === 4) {
-    // Four pawns - diamond/square formation
-    const gap = size * offset * 1.3;
-    positions.push({ x: centerX - gap, y: centerY });
-    positions.push({ x: centerX, y: centerY - gap });
-    positions.push({ x: centerX + gap, y: centerY });
-    positions.push({ x: centerX, y: centerY + gap });
+    if (triangleColor === 'red') {
+      positions.push({ x: centerX - (size * .3), y: centerY + (size * .27) });
+      positions.push({ x: centerX + (size * .03), y: centerY + (size * .27) });
+      positions.push({ x: centerX - (size * .14), y: centerY + (size * .1) });
+      positions.push({ x: centerX - (size * .14), y: centerY + (size * .34) });
+    } else if (triangleColor === 'green') {
+      positions.push({ x: centerX - (size * .54), y: centerY - (size * .3) });
+      positions.push({ x: centerX - (size * .54), y: centerY + (size * .03) });
+      positions.push({ x: centerX - (size * .4), y: centerY - (size * .13) });
+      positions.push({ x: centerX - (size * .6), y: centerY - (size * .13) });
+    } else if (triangleColor === 'blue') {
+      positions.push({ x: centerX - (size * .3), y: centerY - (size * .54) });
+      positions.push({ x: centerX + (size * .03), y: centerY - (size * .54) });
+      positions.push({ x: centerX - (size * .14), y: centerY - (size * .35) });
+      positions.push({ x: centerX - (size * .14), y: centerY - (size * .6) });
+    } else {
+      positions.push({ x: centerX + (size * .27), y: centerY - (size * .3) });
+      positions.push({ x: centerX + (size * .27), y: centerY + (size * .03) });
+      positions.push({ x: centerX + (size * .13), y: centerY - (size * .13) });
+      positions.push({ x: centerX + (size * .35), y: centerY - (size * .13) });
+    }
   }
   
   return positions;
@@ -163,10 +171,10 @@ const Destination = () => {
                 {
                   left: pos.x,
                   top: pos.y,
-                }
+                },{transform: [{rotate: rotatePawn(pawn.color)}]}
               ]}
             >
-              <Pawn pawnData={pawn} />
+              <Pawn pawnData={pawn} showHollowCircle={false} />
             </View>
           );
         });
@@ -189,10 +197,12 @@ const styles = StyleSheet.create({
     left: 0,
   },
   pawnWrapper: {
+    justifyContent: "center",
+    alignItems: "center",
     position: "absolute",
     height: 20,
     width: 20,
-    transform: [{ translateX: -12 }, { translateY: -12 }], // Center the pawn
+    // transform: [{ translateX: -12 }, { translateY: -12 }], // Center the pawn
     zIndex: 10,
   },
 });

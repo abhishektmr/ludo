@@ -3,7 +3,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { useSelector } from "react-redux";
-import rotate from "../../helpers/RotateArrow";
+import rotate, { rotateArrow } from "../../helpers/RotateUtility";
 import { selectAllPawns } from "../../redux/selectors";
 import Pawn from "./pawn";
 
@@ -70,7 +70,7 @@ const Tile = React.memo(
             color={arrowColor}
             style={{
               position: "absolute",
-              transform: [{ rotate: rotate(id) }],
+              transform: [{ rotate: rotateArrow(id) }],
             }}
           />
         )}

@@ -12,8 +12,11 @@ import Wrapper from "../components/ui/wrapper";
 import dimensions from "../constants/dimensions";
 import { loadSound, playSound } from "../helpers/SoundUtility";
 import AppLoading from "./appLoading";
+import { useDispatch } from "react-redux";
+import { setGameState } from "../redux/gameSlice";
 
 export default function Home() {
+  const dispatch = useDispatch();
   const router = useRouter();
   const soundRef = useRef(null);
   const isFocused = useIsFocused();
@@ -28,11 +31,175 @@ export default function Home() {
       const keys = await AsyncStorage.getAllKeys();
       console.log("before Clear", keys);
       // await AsyncStorage.clear();
-      // const newkeys = await AsyncStorage.getAllKeys();
-      // console.log("after clear ", newkeys);
       const rootKeyData = await AsyncStorage.getItem("persist:game");
       const parsed = JSON.parse(rootKeyData); 
       console.log("gameData: ", JSON.parse(parsed.game));
+
+
+//       const newGameData = {
+//   "currentPlayerId": 2,
+//   "diceRollId": 42,
+//   "diceRollResult": 2,
+//   "fireWorks": false,
+//   "isDiceRolled": false,
+//   "players": [
+//     {
+//       "id": 1,
+//       "pawns": [
+//         {
+//           "color": "red",
+//           "id": "A1",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "red",
+//           "id": "A2",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "red",
+//           "id": "A3",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "red",
+//           "id": "A4",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         }
+//       ]
+//     },
+//     {
+//       "id": 2,
+//       "pawns": [
+//         {
+//           "color": "green",
+//           "id": "B1",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "green",
+//           "id": "B2",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "green",
+//           "id": "B3",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "green",
+//           "id": "B4",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         }
+//       ]
+//     },
+//     {
+//       "id": 3,
+//       "pawns": [
+//         {
+//           "color": "blue",
+//           "id": "C1",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "blue",
+//           "id": "C2",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "blue",
+//           "id": "C3",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "blue",
+//           "id": "C4",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         }
+//       ]
+//     },
+//     {
+//       "id": 4,
+//       "pawns": [
+//         {
+//           "color": "yellow",
+//           "id": "D1",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "yellow",
+//           "id": "D2",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "yellow",
+//           "id": "D3",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         },
+//         {
+//           "color": "yellow",
+//           "id": "D4",
+//           "isKilled": false,
+//           "moves": 57,
+//           "onHomePath": true,
+//           "tileId": null
+//         }
+//       ]
+//     }
+//   ],
+//   "winner": 0
+// };
+//        //update Redux immediately
+//       dispatch(setGameState(newGameData));
+//       await AsyncStorage.setItem("persist:game", JSON.stringify({game: JSON.stringify(newGameData)}));
+// const rootKeyData = await AsyncStorage.getItem("persist:game");
+// const parsed = JSON.parse(rootKeyData); 
+// console.log("gameData: ", parsed.game);
     })();
 
     if (fontsLoaded) {

@@ -13,7 +13,7 @@ import { movePawn } from "../../redux/gameSlice";
 import { selectCurrentPlayerId, selectIsDiceRolled } from "../../redux/selectors";
 import { pawnImage } from "../../util/gameUtils";
 
-const Pawn = React.memo(({ pawnData }) => {
+const Pawn = React.memo(({ pawnData, showHollowCircle=true }) => {
   // console.log("Pawn component rerendered ", pawnData);
   const dispatch = useDispatch();
   const currentPlayerId = useSelector(selectCurrentPlayerId);
@@ -73,7 +73,7 @@ const Pawn = React.memo(({ pawnData }) => {
       onPress={handleMovePawn}
     >
       <View style={styles.inner}>
-      <View style={styles.hollowCircle}>
+      <View style={ showHollowCircle ? styles.hollowCircle : null}>
         {showPointedCircle && isDiceRolled && (
           <Animated.Image
             source={pointed_circle}
